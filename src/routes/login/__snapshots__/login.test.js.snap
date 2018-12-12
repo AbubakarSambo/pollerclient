@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login form renders correctly 1`] = `
+<div>
+  <div
+    className="sc-kpOJdX hqChUe"
+    label="Username"
+    required={true}
+    type="text"
+  >
+    <span
+      className="sc-jzJRlG kQupf"
+    >
+      Username
+    </span>
+    <input
+      id="username"
+      onChange={[Function]}
+      placeholder="Username"
+      value=""
+    />
+  </div>
+  <div
+    className="sc-kpOJdX ddVwRn"
+    label="Password"
+    required={true}
+    type="password"
+  >
+    <span
+      className="sc-jzJRlG kQupf"
+    >
+      Password
+    </span>
+    <input
+      id="password"
+      onChange={[Function]}
+      placeholder="Password"
+      type="password"
+      value=""
+    />
+  </div>
+  <div
+    className="sc-gzVnrw cIYwRj"
+    default="100%"
+  >
+    <button
+      className="sc-bdVaJa eenbRK"
+      id="signInButton"
+      onClick={[Function]}
+    >
+      Sign in
+    </button>
+  </div>
+</div>
+`;
