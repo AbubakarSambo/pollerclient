@@ -1,7 +1,7 @@
 let BASE_URL;
 
 if (process.env.NODE_ENV === "development") {
-  BASE_URL = "http://192.168.88.124:8080/registration_api/api";
+  BASE_URL = "http://localhost:3000";
 } else {
   // get production client domain from the browser location
   // eg ics.mykid.school => ['ics', 'mykid', 'school']

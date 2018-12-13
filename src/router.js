@@ -4,6 +4,7 @@ import { Route, Switch, routerRedux } from "dva/router";
 import Login from "./routes/login";
 import { Four04 } from "./routes/404";
 import Dashboard from "./routes/dashboard";
+import PU from "./routes/pu";
 
 
 const { ConnectedRouter } = routerRedux
@@ -34,8 +35,16 @@ function RouterConfig({ history, app }) {
             path="/dashboard"
             exact
             render={({ match, ...rest }) => {
-              registerModel(app, require("./models/authentication").default);
+              registerModel(app, require("./models/pus").default);
               return <Dashboard match={match} />;
+            }}
+          />
+          <Route
+            path="/pu"
+            exact
+            render={({ match, ...rest }) => {
+              registerModel(app, require("./models/pus").default);
+              return <PU match={match} />;
             }}
           />
         </Switch>
