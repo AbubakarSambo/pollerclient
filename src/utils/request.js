@@ -7,7 +7,7 @@ import { YQL, CORS, appUrl } from "./config";
 
 
 const AuthToken = localStorage.getItem('token')
-axios.defaults.headers.common.Authorization = `Bearer ${AuthToken}`
+axios.defaults.headers.common.Authorization = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMThjMmQyMjk5NWQ0MGQ0ZGYyMWY2NiIsImlhdCI6MTU0NTEyNjYzMSwiZXhwIjoxNTQ1MjEzMDMxfQ.SPYwI_guOV7VuMSudbh0LeHgLEE809alNRdMRJGbQ_g`
 
 
 

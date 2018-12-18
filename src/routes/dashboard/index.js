@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "dva";
 import { Theme } from '../../components/theme';
-import { DashCard, Panel, Grid, Label, BreadCrumb, FlexiPagination, FlexiTable, LineChart, Card, CircleLine, PieChart } from "../../components/flexibull";
+import { DashCard, Panel, Grid, Label, BreadCrumb, FlexiPagination, FlexiTable, LineChart, SimpleSelect, CircleLine, PieChart, Input } from "../../components/flexibull";
 
 const linchartlist = [45, 65, 45, 60, 80]
 
@@ -22,56 +22,114 @@ const columns = [{
   title: 'LGA', dataIndex: 'lga', key: 'lga'
 }, {
   title: 'Ward', dataIndex: 'ward', key: 'ward'
-}, {
-  title: 'Setup', dataIndex: 'setup', key: 'setup'
-}, {
-  title: 'Accreditation Started', dataIndex: 'accreditationStarted', key: 'accreditationStarted'
-}, {
-  title: 'Accreditation Ended', dataIndex: 'accreditationEnded', key: 'accreditationEnded'
-}, {
-  title: 'Voting Started', dataIndex: 'votingStarted', key: 'votingStarted'
-}, {
-  title: 'Voting Ended', dataIndex: 'votingEnded', key: 'votingEnded'
-}, {
-  title: 'Results', dataIndex: 'results', key: 'results'
 }];
-
-
-const data = [
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-  { name: 'Jack', code: 'ab001', state: 'Gombe', lga: 'Dukku', ward: 'Kashere', setup: 'Started', accreditationStarted: 'Yes', accreditationEnded: 'No', votingStarted: 'Yes', votingEnded: 'No', results: '200' },
-];
 
 class DashBoard extends Component {
   constructor() {
     super();
     this.state = {
-      current: 1,
-      userModal: false
+      currentPage: 1,
+      userModal: false,
+      limit: 10,
+      currentState: '',
+      currentLga: '',
+      currentWard: ''
     }
+    this.filterByState = this.filterByState.bind(this)
+    this.filterByLga = this.filterByLga.bind(this)
+    this.filterByWard = this.filterByWard.bind(this)
+    
   }
   componentDidMount(){
     this.props.dispatch({
-      type: "pu/getPus"
+      type: "pu/getStates"
     })
   }
   onChange = (page) => {
     this.setState({
-      current: page,
+      currentPage: page,
     });
+    if(this.state.currentWard){
+      this.props.dispatch({
+        type: "pu/getPuByWard",
+        data: {
+          ward: this.state.currentWard,
+          page: page,
+          limit: this.state.limit
+        }
+      })
+    }
+    else if(this.state.currentLga){
+      this.props.dispatch({
+        type: "pu/getPuByLga",
+        data: {
+          lga: this.state.currentLga,
+          page: page,
+          limit: this.state.limit
+        }
+      })
+    }
+    else{
+      this.props.dispatch({
+        type: "pu/getPuByStates",
+        data: {
+          state: this.state.currentState.value,
+          page: page,
+          limit: this.state.limit
+        }
+      })
+    }
+  }
+  filterByLga(lga){
+    this.setState({currentLga: lga.value})
+    this.props.dispatch({
+      type: "pu/getPuByLga",
+      data: {
+        lga: lga.value,
+        page: this.state.currentPage,
+        limit: this.state.limit
+      }
+    })
+    this.props.dispatch({
+      type: "pu/getWards",
+      data: {
+        lga: lga.value,
+      }
+    })
+  }
+  filterByWard(ward){
+    this.setState({currentWard: ward.value})
+    this.props.dispatch({
+      type: "pu/getPuByWard",
+      data: {
+        ward: ward.value,
+        page: this.state.currentPage,
+        limit: this.state.limit
+      }
+    })
+  }
+  filterByState(state){
+    this.setState({currentState: state, currentLga: '', currentWard:''})
+    this.props.dispatch({
+      type: "pu/getPuByStates",
+      data: {
+        state: state.value,
+        page: this.state.currentPage,
+        limit: this.state.limit
+      }
+    })
+    this.props.dispatch({
+      type: "pu/getLgas",
+      data: {
+        state: state.value,
+      }
+    })
+    
   }
 
   render() {
+    const { states,lgas,wards, pus } = this.props.pu
+    const { docs }= pus
     return (
       <Panel padding="20px">
         <BreadCrumb
@@ -94,14 +152,38 @@ class DashBoard extends Component {
             <CircleLine percentage={60} size="100px" rounding={false} color="#a3a1fb"></CircleLine>
           </DashCard>
         </Grid>
+        <p></p>
+        <Grid pad="15px" default="1fr 1fr 1fr" desktop="repeat(2,1fr)" tablet="1fr" >
+                    <div>
+                      <h2>State</h2>
+                        <SimpleSelect
+                            onChange={this.filterByState}
+                            options={states || []}
+                        />
+                    </div>
+                    <div>
+                      <h2>LGA</h2>
+                        <SimpleSelect
+                            onChange={this.filterByLga}
+                            options={lgas || []}
+                        />
+                    </div>
+                    <div>
+                      <h2>Ward</h2>
+                        <SimpleSelect
+                            onChange={this.filterByWard}
+                            options={wards || []}
+                        />
+                    </div>
+                </Grid>
         <FlexiTable
           columns={columns}
-          data={this.props.pu.pus || data}
+          data={docs || []}
         >
           <FlexiPagination
-            total={this.props.pu.pus.length}
+            total={pus.total}
             onChange={this.onChange}
-            current={this.state.current}
+            current={this.state.currentPage}
             pageCounts={pageOptions}
           />
         </FlexiTable>

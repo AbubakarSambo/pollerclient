@@ -141,7 +141,7 @@ export class Login extends React.Component {
             <ForgotPassword>Forgot your password? <LinkWrapper to='/'> click here</LinkWrapper></ForgotPassword>
           </div>
         </LoginDiv>
-        <Footer> Copyright © {new Date().getFullYear()}, NECO | ALL RIGHTS RESERVED</Footer>
+        <Footer> Copyright © {new Date().getFullYear()}, ... | ALL RIGHTS RESERVED</Footer>
       </Wrapper>
     );
   }

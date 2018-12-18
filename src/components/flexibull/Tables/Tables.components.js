@@ -261,7 +261,6 @@ export class FlexiPagination extends React.Component {
     
     changePages = (selectedOption) => {
         this.setState({ pageSize: selectedOption });
-        console.log(`Option selected:`, selectedOption);
     }
     render() {
         return (
