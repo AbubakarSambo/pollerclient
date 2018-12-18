@@ -4,6 +4,7 @@ import { Route, Switch, routerRedux } from "dva/router";
 import Login from "./routes/login";
 import { Four04 } from "./routes/404";
 import Dashboard from "./routes/dashboard";
+import Events from "./routes/events";
 import PU from "./routes/pu";
 import Agents from "./routes/agents";
 import Supervisors from "./routes/supervisors";
@@ -39,6 +40,14 @@ function RouterConfig({ history, app }) {
             render={({ match, ...rest }) => {
               registerModel(app, require("./models/pus").default);
               return <Dashboard match={match} />;
+            }}
+          />
+          <Route
+            path="/events"
+            exact
+            render={({ match, ...rest }) => {
+              registerModel(app, require("./models/pus").default);
+              return <Events match={match} />;
             }}
           />
           <Route
