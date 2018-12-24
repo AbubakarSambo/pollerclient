@@ -106,7 +106,6 @@ export default {
       const { data } = payload
       const response = yield call(getPuByState, data)
       const { success, raw } = response
-      console.log(raw.docs)
       let newDocs = raw.docs && raw.docs.map((pu) => {
         return {
           ...pu,

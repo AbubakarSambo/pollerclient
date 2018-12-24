@@ -9,8 +9,6 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
     "axios": "^0.17.1",
     "babel-plugin-import": "^1.9.1",
     "body-parser": "^1.16.1",
@@ -35,7 +33,9 @@
     "rc-menu": "^7.4.16",
     "rc-pagination": "^1.17.3",
     "rc-table": "^6.4.0",
+    "react": "^16.2.0",
     "react-d3-components": "^0.9.1",
+    "react-dom": "^16.2.0",
     "react-dropdown": "^1.6.2",
     "react-epic-spinners": "^0.2.1",
     "react-flexa": "^0.8.3",
@@ -46,6 +46,7 @@
     "react-syntax-highlighter": "^8.0.1",
     "react-test-renderer": "^16.5.2",
     "reactstrap": "^6.5.0",
+    "redux-logger": "^3.0.6",
     "roadhog": "^2.0.0",
     "rodal": "^1.6.3",
     "serve": "^10.0.2",

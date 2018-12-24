@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "dva";
 import { Theme } from '../../components/theme';
-import { DashCard, Panel, Grid, Label, BreadCrumb, FlexiPagination, FlexiTable, LineChart, SimpleSelect, CircleLine, PieChart, Input } from "../../components/flexibull";
+import { DashCard, Panel, Grid, Label, BreadCrumb, FlexiPagination, FlexiTable, LineChart, SimpleSelect, CircleLine, PieChart, Loader } from "../../components/flexibull";
 
 const linchartlist = [45, 65, 45, 60, 80]
 
@@ -176,7 +176,7 @@ class DashBoard extends Component {
                         />
                     </div>
                 </Grid>
-        <FlexiTable
+                {this.props.loading.global ? <Loader /> : <FlexiTable
           columns={columns}
           data={docs || []}
         >
@@ -186,10 +186,10 @@ class DashBoard extends Component {
             current={this.state.currentPage}
             pageCounts={pageOptions}
           />
-        </FlexiTable>
+        </FlexiTable>}
       </Panel>
     );
   }
 }
 
-export default connect(({ app, pu }) => ({ app, pu }))(DashBoard);
+export default connect(({ app, pu, loading }) => ({ app, pu, loading }))(DashBoard);

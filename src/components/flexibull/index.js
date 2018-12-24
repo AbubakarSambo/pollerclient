@@ -12,3 +12,4 @@ export * from './BreadCrumb/BreadCrumb.components';
 export * from './Tables/Tables.components';
 export * from './Checkbox/Checkbox.components';
 export * from './Switch/Switch.components';
+export * from './Loader/Loader.components';

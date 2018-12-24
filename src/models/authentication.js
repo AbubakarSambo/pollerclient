@@ -15,12 +15,11 @@ export default {
 
   effects: {
     *login(payload, { call, select, put }) {
-      yield put(routerRedux.push("/dashboard"));
       const { data } = payload
       const response = yield call(login, data)
       const { success, raw } = response
       if (success) {
-        localStorage.setItem('token', raw)
+        localStorage.setItem('token', raw.token)
         yield put(routerRedux.push("/dashboard"));
       }
 
