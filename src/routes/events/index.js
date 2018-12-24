@@ -35,7 +35,10 @@ const columns = [{
 }, {
   title: 'Voting Ended', dataIndex: 'votingEnded', key: 'votingEnded'
 }, {
-  title: 'Results', dataIndex: 'results', key: 'results'
+  title: 'APC', dataIndex: 'apc', key: 'apc'
+}
+, {
+  title: 'PDP', dataIndex: 'pdp', key: 'pdp'
 }];
 
 class Events extends Component {

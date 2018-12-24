@@ -69,7 +69,7 @@ export default {
       const response = yield call(getLgas, data)
       const { success, raw } = response
       if (success) {
-        const lgasModified = raw.map((lga) => {
+        const lgasModified = raw.length > 0 && raw.map((lga) => {
           return {
             value: lga.toUpperCase(),
             label: lga
@@ -106,7 +106,8 @@ export default {
       const { data } = payload
       const response = yield call(getPuByState, data)
       const { success, raw } = response
-      let newDocs = raw.docs.map((pu) => {
+      console.log(raw.docs)
+      let newDocs = raw.docs && raw.docs.map((pu) => {
         return {
           ...pu,
           key: pu._id,
@@ -137,7 +138,12 @@ export default {
       let newDocs = raw.docs.map((pu) => {
         return {
           ...pu,
-          key: pu._id
+          key: pu._id,
+          setup: pu.setup ? 'Yes': 'No',
+          accreditationStarted: pu.accreditationStarted ? 'Yes' : 'No',
+          accreditationEnded: pu.accreditationEnded ? 'Yes' : 'No',
+          votingStarted: pu.votingStarted ? 'Yes': 'No',
+          votingEnded : pu.votingEnded ? 'Yes' : 'No'
         }
       })
       let pusModified = {
@@ -160,7 +166,12 @@ export default {
       let newDocs = raw.docs.map((pu) => {
         return {
           ...pu,
-          key: pu._id
+          key: pu._id,
+          setup: pu.setup ? 'Yes': 'No',
+          accreditationStarted: pu.accreditationStarted ? 'Yes' : 'No',
+          accreditationEnded: pu.accreditationEnded ? 'Yes' : 'No',
+          votingStarted: pu.votingStarted ? 'Yes': 'No',
+          votingEnded : pu.votingEnded ? 'Yes' : 'No'
         }
       })
       let pusModified = {
