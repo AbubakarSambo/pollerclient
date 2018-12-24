@@ -1,13 +1,15 @@
 {
   "private": true,
   "scripts": {
-    "start": "serve -s build",
+    "start": "roadhog server",
     "build": "cross-env NODE_ENV=production roadhog build",
     "heroku-postbuild": "yarn build",
     "lint": "eslint --ext .js src test",
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "axios": "^0.17.1",
     "babel-plugin-import": "^1.9.1",
     "body-parser": "^1.16.1",
@@ -32,9 +34,7 @@
     "rc-menu": "^7.4.16",
     "rc-pagination": "^1.17.3",
     "rc-table": "^6.4.0",
-    "react": "^16.2.0",
     "react-d3-components": "^0.9.1",
-    "react-dom": "^16.2.0",
     "react-dropdown": "^1.6.2",
     "react-epic-spinners": "^0.2.1",
     "react-flexa": "^0.8.3",
@@ -47,7 +47,7 @@
     "reactstrap": "^6.5.0",
     "roadhog": "^2.0.0",
     "rodal": "^1.6.3",
-    "serve": "^10.1.1",
+    "serve": "^10.0.2",
     "styled-components": "^4.0.0-beta.9"
   },
   "devDependencies": {
