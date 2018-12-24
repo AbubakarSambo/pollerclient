@@ -3,6 +3,7 @@
   "scripts": {
     "start": "roadhog server",
     "build": "cross-env NODE_ENV=production roadhog build",
+    "heroku-postbuild": "yarn build",
     "lint": "eslint --ext .js src test",
     "precommit": "npm run lint"
   },
