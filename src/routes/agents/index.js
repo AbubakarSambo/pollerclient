@@ -52,9 +52,9 @@ class DashBoard extends Component {
     this.closeModal = this.closeModal.bind(this)
   }
   componentDidMount(){
-    this.props.dispatch({
-      type: "official/getOfficials"
-    })
+    // this.props.dispatch({
+    //   type: "official/getOfficials"
+    // })
   }
   onChange = (page) => {
     this.setState({

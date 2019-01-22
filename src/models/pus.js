@@ -1,5 +1,5 @@
 
-import { getPus, createPu, getStates,getLgas,getWards, getPuByState, getPuByLga, getPuByWard } from "../services/pus";
+import { getPus, createPu, getStates,getLgas,getWards, getPuByState,getPuCount, getPuByLga, getPuByWard, getPuResults } from "../services/pus";
 
 
 export default {
@@ -11,7 +11,14 @@ export default {
     activePu: {},
     states: [],
     lgas: [],
-    wards: []
+    wards: [],
+    allData: [],
+    stateLabels: [],
+    stateValues: [],
+    stateResultLabels: [],
+    apc: 0,
+    pdp: 0,
+    lgaResults: []
   },
 
   subscriptions: {
@@ -29,13 +36,16 @@ export default {
       const { success, raw } = response
       if (success) {
         let pusModified = raw.map((pu) => {
+          console.log(pu)
           return {
             ...pu,
             setup: pu.setup ? 'Yes': 'No',
             accreditationStarted: pu.accreditationStarted ? 'Yes' : 'No',
             accreditationEnded: pu.accreditationEnded ? 'Yes' : 'No',
             votingStarted: pu.votingStarted ? 'Yes': 'No',
-            votingEnded : pu.votingEnded ? 'Yes' : 'No'
+            votingEnded : pu.votingEnded ? 'Yes' : 'No',
+            apc: pu.apc ? pu.apc : 0,
+            pdp: pu.pdp ? pu.pdp : 0
           }
         })
         yield put({
@@ -75,6 +85,7 @@ export default {
             label: lga
           }
         })
+        console.log(lgasModified, raw)
         yield put({
           type: "save",
           payload: {
@@ -114,7 +125,9 @@ export default {
           accreditationStarted: pu.accreditationStarted ? 'Yes' : 'No',
           accreditationEnded: pu.accreditationEnded ? 'Yes' : 'No',
           votingStarted: pu.votingStarted ? 'Yes': 'No',
-          votingEnded : pu.votingEnded ? 'Yes' : 'No'
+          votingEnded : pu.votingEnded ? 'Yes' : 'No',
+          apc: pu.apc ? pu.apc : 0,
+            pdp: pu.pdp ? pu.pdp : 0
         }
       })
       let pusModified = {
@@ -130,6 +143,50 @@ export default {
         });
       }
     },
+    *getPuCount(payload, { call, put }) {
+      const { data } = payload
+      const response = yield call(getPuCount, data)
+      const { success, raw } = response
+      if(success){
+        let stateLabels = raw.map((item) => {
+          return item.lga
+        })
+        let stateValues = raw.map((item) => {
+          return item.pollingUnitsInLga
+        })
+        yield put({
+          type: 'save',
+          payload: {
+            allData: raw,
+          stateLabels,
+          stateValues
+          }
+        })
+      }
+    },
+    *getPuResults(payload, { call, put }) {
+      const { data } = payload
+      const response = yield call(getPuResults, data)
+      const { success, raw } = response
+      if(success){
+        let lgaResults = raw.map((item) => {
+          return {
+            lga: item.lga,
+            apc: item.apcResultsInLga,
+            pdp: item.pdpResultsInLga
+          }
+        })
+        
+        yield put({
+          type: 'save',
+          payload: {
+            allResults: raw,
+            lgaResults
+          }
+        })
+      }
+      console.log(raw)
+    },
     *getPuByLga(payload, { call, put }) {
       const { data } = payload
       const response = yield call(getPuByLga, data)
@@ -142,7 +199,9 @@ export default {
           accreditationStarted: pu.accreditationStarted ? 'Yes' : 'No',
           accreditationEnded: pu.accreditationEnded ? 'Yes' : 'No',
           votingStarted: pu.votingStarted ? 'Yes': 'No',
-          votingEnded : pu.votingEnded ? 'Yes' : 'No'
+          votingEnded : pu.votingEnded ? 'Yes' : 'No',
+          apc: pu.apc ? pu.apc : 0,
+            pdp: pu.pdp ? pu.pdp : 0
         }
       })
       let pusModified = {
@@ -170,7 +229,9 @@ export default {
           accreditationStarted: pu.accreditationStarted ? 'Yes' : 'No',
           accreditationEnded: pu.accreditationEnded ? 'Yes' : 'No',
           votingStarted: pu.votingStarted ? 'Yes': 'No',
-          votingEnded : pu.votingEnded ? 'Yes' : 'No'
+          votingEnded : pu.votingEnded ? 'Yes' : 'No',
+          apc: pu.apc ? pu.apc : 0,
+            pdp: pu.pdp ? pu.pdp : 0
         }
       })
       let pusModified = {

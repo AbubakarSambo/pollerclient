@@ -40,6 +40,20 @@ export async function getPuByState(data) {
     url,
   });
 }
+export async function getPuCount(data) {
+  const {state} = data
+  const url = `${endpoint}/count/pu/${state}`;
+  return request({
+    url,
+  });
+}
+export async function getPuResults(data) {
+  const {state} = data
+  const url = `${endpoint}/result/pu/${state}`;
+  return request({
+    url,
+  });
+}
 
 export async function getPuByLga(data) {
   const {lga, page, limit} = data

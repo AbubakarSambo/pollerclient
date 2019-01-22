@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "dva";
+import {findIndexInArray} from '../../utils/utils'
 import { Theme } from '../../components/theme';
 import { DashCard, Panel, Grid, Label, BreadCrumb, FlexiPagination, FlexiTable, LineChart, SimpleSelect, CircleLine, PieChart, Loader } from "../../components/flexibull";
+import {Bar} from 'react-chartjs-2';
 
 const linchartlist = [45, 65, 45, 60, 80]
 
@@ -22,26 +24,12 @@ const columns = [{
   title: 'LGA', dataIndex: 'lga', key: 'lga'
 }, {
   title: 'Ward', dataIndex: 'ward', key: 'ward'
-}, {
-  title: 'Setup', dataIndex: 'setup', key: 'setup'
-}, {
-  title: 'Accreditation Started', dataIndex: 'accreditationStarted', key: 'accreditationStarted'
-}, {
-  title: 'Accreditation Ended', dataIndex: 'accreditationEnded', key: 'accreditationEnded'
-}, {
-  title: 'Number Accredited', dataIndex: 'numberAccredited', key: 'numberAccredited'
-}, {
-  title: 'Voting Started', dataIndex: 'votingStarted', key: 'votingStarted'
-}, {
-  title: 'Voting Ended', dataIndex: 'votingEnded', key: 'votingEnded'
-}, {
-  title: 'APC', dataIndex: 'apc', key: 'apc'
-}
-, {
-  title: 'PDP', dataIndex: 'pdp', key: 'pdp'
 }];
 
-class Events extends Component {
+
+
+
+class DashBoard extends Component {
   constructor() {
     super();
     this.state = {
@@ -88,29 +76,33 @@ class Events extends Component {
     }
     else{
       this.props.dispatch({
-        type: "pu/getPuByStates",
+        type: "pu/getPuCount",
         data: {
           state: this.state.currentState.value,
-          page: page,
-          limit: this.state.limit
         }
       })
     }
   }
   filterByLga(lga){
-    this.setState({currentLga: lga.value})
-    this.props.dispatch({
-      type: "pu/getPuByLga",
-      data: {
-        lga: lga.value,
-        page: this.state.currentPage,
-        limit: this.state.limit
-      }
+    console.log(lga)
+    let lgaName = lga.value
+    let filtered = this.props.pu.allData.filter((item) => {
+      console.log(item)
+      return item.lga === lgaName
+    })
+    const index = findIndexInArray(this.props.pu.allData, filtered[0] ,'lga')
+    console.log(filtered,index)
+    let wardLabel = this.props.pu.allData[index].wards.map((newItem) => {
+      return newItem.ward
+    })
+    let wardValue = this.props.pu.allData[index].wards.map((newItem) => {
+      return newItem.pollingUnitsInWard
     })
     this.props.dispatch({
-      type: "pu/getWards",
-      data: {
-        lga: lga.value,
+      type: 'pu/save',
+      payload: {
+        stateLabels: wardLabel,
+      stateValues: wardValue
       }
     })
   }
@@ -128,11 +120,9 @@ class Events extends Component {
   filterByState(state){
     this.setState({currentState: state, currentLga: '', currentWard:''})
     this.props.dispatch({
-      type: "pu/getPuByStates",
+      type: "pu/getPuCount",
       data: {
         state: state.value,
-        page: this.state.currentPage,
-        limit: this.state.limit
       }
     })
     this.props.dispatch({
@@ -145,32 +135,31 @@ class Events extends Component {
   }
 
   render() {
-    const { states,lgas,wards, pus } = this.props.pu
+    const { states,lgas,wards, pus, stateLabels, stateValues } = this.props.pu
     const { docs }= pus
+    const data = {
+      labels: stateLabels || [],
+      datasets: [
+        {
+          label: 'Polling Units',
+          backgroundColor: 'rgba(255,99,132,0.2)',
+          borderColor: 'rgba(255,99,132,1)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+          hoverBorderColor: 'rgba(255,99,132,1)',
+          data: stateValues || []
+        }
+      ]
+    }
     return (
       <Panel padding="20px">
         <BreadCrumb
           color={Theme.PrimaryFontColor}
           list={[]}
         />
-        <p>Dashboard</p>
-        <Grid pad="15px" default="repeat(3,1fr)" desktop="repeat(2,1fr)">
-          <DashCard title="Total Alternative" value="21,345" subValue={<Label color={Theme.PrimaryColor}><i className="icon-angle-up" /> 3.8</Label>}>
-            <PieChart
-              list={[{ name: "software", color: Theme.PrimaryColor, value: 3000 }, { name: "projects", color: Theme.PrimaryDark, value: 3000 }, { name: "GIS", color: Theme.PrimaryFontColor, value: 2000 }, { name: "Programs", color: Theme.PrimaryRed, value: 4000 }, { name: "finance", color: Theme.PrimaryGrey, value: 4000 }, { name: "Operations", color: Theme.PrimaryOrange, value: 4000 }]}
-              size="100px"
-              innerRadius={20}
-            />
-          </DashCard>
-          <DashCard title="Testing Title Block" value="34,100" subValue={<Label>0.8</Label>}>
-            <LineChart list={linchartlist} />
-          </DashCard>
-          <DashCard title="Total Centers setup" value="57,847" subValue={<Label color={Theme.PrimaryRed}><i className="icon-angle-down" /> 13.8</Label>}>
-            <CircleLine percentage={60} size="100px" rounding={false} color="#a3a1fb"></CircleLine>
-          </DashCard>
-        </Grid>
+        <p>Polling Units</p>
         <p></p>
-        <Grid pad="15px" default="1fr 1fr 1fr" desktop="repeat(2,1fr)" tablet="1fr" >
+        <Grid pad="15px" default="1fr 1fr" desktop="repeat(2,1fr)" tablet="1fr" >
                     <div>
                       <h2>State</h2>
                         <SimpleSelect
@@ -185,28 +174,26 @@ class Events extends Component {
                             options={lgas || []}
                         />
                     </div>
-                    <div>
-                      <h2>Ward</h2>
-                        <SimpleSelect
-                            onChange={this.filterByWard}
-                            options={wards || []}
-                        />
-                    </div>
                 </Grid>
-       { this.props.loading.global ? <Loader /> :<FlexiTable
-          columns={columns}
-          data={docs || []}
-        >
-          <FlexiPagination
-            total={pus.total}
-            onChange={this.onChange}
-            current={this.state.currentPage}
-            pageCounts={pageOptions}
-          />
-        </FlexiTable>}
+                {this.props.loading.global ? <Loader /> :   <Bar
+          data={data}
+          width={80}
+          height={30}
+          options={{
+            maintainAspectRatio: true,
+            scales: {
+              xAxes: [{
+                  stacked: true
+              }],
+              yAxes: [{
+                  stacked: true
+              }]
+          }
+          }}
+        />}
       </Panel>
     );
   }
 }
 
-export default connect(({ app, pu, loading }) => ({ app, pu, loading }))(Events);
+export default connect(({ app, pu, loading }) => ({ app, pu, loading }))(DashBoard);

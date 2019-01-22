@@ -4,6 +4,8 @@ import { Route, Switch, routerRedux } from "dva/router";
 import Login from "./routes/login";
 import { Four04 } from "./routes/404";
 import Dashboard from "./routes/dashboard";
+import Charts from "./routes/charts";
+import Results from "./routes/results";
 import Events from "./routes/events";
 import PU from "./routes/pu";
 import Agents from "./routes/agents";
@@ -43,6 +45,14 @@ function RouterConfig({ history, app }) {
             }}
           />
           <Route
+            path="/charts"
+            exact
+            render={({ match, ...rest }) => {
+              registerModel(app, require("./models/pus").default);
+              return <Charts match={match} />;
+            }}
+          />
+          <Route
             path="/events"
             exact
             render={({ match, ...rest }) => {
@@ -55,7 +65,15 @@ function RouterConfig({ history, app }) {
             exact
             render={({ match, ...rest }) => {
               registerModel(app, require("./models/pus").default);
-              return <PU match={match} />;
+              return <Charts match={match} />;
+            }}
+          />
+          <Route
+            path="/results"
+            exact
+            render={({ match, ...rest }) => {
+              registerModel(app, require("./models/pus").default);
+              return <Results match={match} />;
             }}
           />
           <Route

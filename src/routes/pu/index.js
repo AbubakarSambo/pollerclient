@@ -100,11 +100,11 @@ class DashBoard extends Component {
             </Boxed>
         </Grid>
         <PuForm
-                    open={this.state.userModal}
-                    close={this.closeModal}
-                    editing={this.state.editing}
-                    activePu={this.props.pu.activePu}
-                />
+            open={this.state.userModal}
+            close={this.closeModal}
+            editing={this.state.editing}
+            activePu={this.props.pu.activePu}
+        />
         <FlexiTable
           columns={columns}
           data={this.props.pu.pus || data}
